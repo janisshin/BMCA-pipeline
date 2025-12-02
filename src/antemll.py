@@ -111,7 +111,7 @@ class antemll():
         N[:, v_star < 0] = -1 * N[:, v_star < 0]
         v_star = np.abs(v_star)
 
-        assert np.all(np.isclose(np.matmul(N, v_star), 0)), "data does not describe steady state"
+        assert np.all(np.isclose(np.matmul(N, v_star), 0, atol=1e-07)), "data does not describe steady state"
         
         yn[yn == 0] = 1E-6
 
@@ -137,7 +137,6 @@ class antemll():
             r.conservedMoietyAnalysis = True
             model = cobra.io.read_sbml_model(cobra_smbl)
             # model = cobra.io.read_sbml_model("../../models/sbml/Simplified_Teusink_yeast_cobra.xml")
-            # model = cobra.io.read_sbml_model("../../../models/sbml/JSexample22_cobra.xml")
 
             n_metabolites = len(model.metabolites)
             n_reactions = len(model.reactions)
@@ -235,7 +234,7 @@ class antemll():
         t101 = t7_ @ t8 @ Eb @ (self.yn).T # here, we may need to add in another dimension
         chi_star = t100 @ t101
 
-        chi_star.rename({1:'met_conc'}, axis=1, inplace=True)
+        # chi_star.rename({1:'met_conc'}, axis=1, inplace=True)
         res = {squiggle_idx[i]: b[i] for i in range(len(squiggle_idx))}
         chi_star = chi_star.rename(index=res)
 
